@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv";
+import { join } from 'path';
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ export const AppDataSource = new DataSource({
   username: DB_USERNAME,
   password: DB_PASSWORD,
   database: DB_DATABASE,  
-  entities: [`${normalizedDir}/**/entity/*.ts`],
+  entities: [ join(process.cwd(), 'src', 'core', '**', 'entity', '*.ts') ],
   migrations: [`${normalizedDir}/**/migrations/*.ts`],
   synchronize: false,
   logging: false,
