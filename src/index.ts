@@ -1,6 +1,6 @@
 import * as express from "express";
 import router from "./adapters/http/routes/user.routes";
-import { AppDataSource } from "./adapters/database/data-source";
+import { AppDataSource } from "./data-source";
 import * as dotenv from "dotenv";
 import * as cors from "cors";
 import "reflect-metadata";

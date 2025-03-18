@@ -30,6 +30,8 @@
     "build": "tsc",
     "start": "ts-node src/index.ts",
     "typeorm": "typeorm-ts-node-commonjs",
-    "migration": " npm run typeorm migration:run -- -d ./src/data-source.ts"
+    "migration:generate": "typeorm-ts-node-commonjs -d ./src/data-source.ts migration:generate ./src/adapters/dataSource/migrations/default",
+    "migration:run": "typeorm-ts-node-commonjs -d ./src/adapters/dataSource/data-source.ts migration:run",
+    "migration:revert": "typeorm-ts-node-commonjs -d ./src/adapters/dataSource/data-source.ts migration:revert"
   }
 }
