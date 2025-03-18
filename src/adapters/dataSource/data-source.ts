@@ -7,9 +7,6 @@ dotenv.config();
 
 const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE } = process.env;
 
-// Normaliza __dirname para usar barras normais
-const normalizedDir = __dirname.replace(/\\/g, "/");
-
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: DB_HOST,
@@ -18,7 +15,7 @@ export const AppDataSource = new DataSource({
   password: DB_PASSWORD,
   database: DB_DATABASE,  
   entities: [ join(process.cwd(), 'src', 'core', '**', 'entity', '*.ts') ],
-  migrations: [`${normalizedDir}/**/migrations/*.ts`],
+  migrations: [join(process.cwd(), `/**/migrations/*.ts`)],
   synchronize: false,
   logging: false,
 });
