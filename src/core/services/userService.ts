@@ -1,11 +1,9 @@
-import { Cars } from "../entity/Cars";
-import { User } from "../entity/User";
+import { Car } from "../domain/Car";
+import { User } from "../domain/User";
 import { UserRepositoryPort } from "../ports/UserRepositoryPort";
 
 export class UserService {
   constructor(private readonly userRepository: UserRepositoryPort) {}
-
-  //user
   async getUsers(): Promise<User[]> {
     return await this.userRepository.findAll();
   }

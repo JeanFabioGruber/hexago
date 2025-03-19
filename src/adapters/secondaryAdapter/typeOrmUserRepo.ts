@@ -1,47 +1,52 @@
-import { User } from "../../core/entity/User";
+import { UserORM } from "../../core/entity/UserORM";
+import { User } from "../../core/domain/User";
 import { UserRepositoryPort } from "../../core/ports/UserRepositoryPort";
-import { AppDataSource } from "../database/data-source";
+import { AppDataSource } from "../dataSource/data-source";
 
-export class TypeOrmUserRepositoryPort implements UserRepositoryPort {
-  private userRepository = AppDataSource.getRepository(User);
+export class TypeOrmUserRepository implements UserRepositoryPort {
+  private userRepository = AppDataSource.getRepository(UserORM);
+
   async findAll(): Promise<User[]> {
-    const users = await this.userRepository.find({ relations: ["cars"] });
+    return await this.userRepository.find({ relations: ["cars"] });
+  }
 
-    return users;
-  }
   async findByEmail(email: string): Promise<User | null> {
-    const user = this.userRepository.findOne({
-      where: { email },
-    });
-    return user;
+    return await this.userRepository.findOne({ where: { email } });
   }
+
   async findId(id: string): Promise<User | null> {
-    const user = this.userRepository.findOne({
-      where: { id },
-      relations: ["cars"],
-    });
-    return user;
+    return await this.userRepository.findOne({ where: { id }, relations: ["cars"] }); 
   }
-  async updateUser(id: string, user: User): Promise<User> {
+
+  async updateUser(id: string, userData: User): Promise<User> {
     const userToUpdate = await this.userRepository.findOne({ where: { id } });
+
     if (!userToUpdate) {
       throw new Error("User not found");
     }
-    userToUpdate.email = user.email;
-    userToUpdate.fullName = user.fullName;
+
+    userToUpdate.email = userData.email;
+    userToUpdate.fullName = userData.fullName;
 
     return await this.userRepository.save(userToUpdate);
   }
+
   async deleteUser(id: string): Promise<boolean> {
     const userToDelete = await this.userRepository.findOne({ where: { id } });
+
     if (!userToDelete) {
       throw new Error("User not found");
     }
+
     await this.userRepository.remove(userToDelete);
     return true;
   }
-  async createUser(user: User): Promise<User> {
-    const newUser = await this.userRepository.save(user);
-    return newUser;
+
+  async createUser(userData: User): Promise<User> {
+    const newUser = new UserORM(); 
+    newUser.email = userData.email;
+    newUser.fullName = userData.fullName;
+    
+    return await this.userRepository.save(newUser);
   }
 }

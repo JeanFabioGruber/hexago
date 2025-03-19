@@ -1,33 +1,36 @@
 import {
+  Entity,
+  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
-import { User } from "./User";
+import { CarsORM } from "./CarsORM";
 
 @Entity()
-export class Cars {
+export class UserORM {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
+
   @Column()
-  name!: string;
+  fullName!: string;
+
+  @Column({ unique: true })
+  email!: string;
+
   @Column()
-  brand!: string;
-  @Column()
-  color!: string;
-  @ManyToOne(() => User, (user) => user.cars, {
+  password!: string;
+
+  @OneToMany(() => CarsORM, (car) => car.user, {
     onDelete: "SET NULL",
     onUpdate: "CASCADE",
   })
-  @JoinColumn({ name: "user_id" })
-  user!: User;
+  cars!: CarsORM[];
 
   @CreateDateColumn()
   createdAt!: Date;
+
   @UpdateDateColumn()
   updatedAt!: Date;
 }

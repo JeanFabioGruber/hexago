@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserService } from "../../../core/services/userService";
-import { User } from "../../../core/entity/User";
+import { User } from "../../../core/domain/User";
 import { Ecrypt } from "../../helpers/encrypt";
 
 export class UserController {

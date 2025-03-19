@@ -1,30 +1,34 @@
 import { CarsRepositoryPort } from "../../core/ports/CarsRepositoryPort";
-import { Cars } from "../../core/entity/Cars";
-import { User } from "../../core/entity/User";
-import { AppDataSource } from "../database/data-source";
+import { Car } from "../../core/domain/Car";
+import { User } from "../../core/domain/User";
+import { CarsORM } from "../../core/entity/CarsORM";
+import { UserORM } from "../../core/entity/UserORM";
+import { AppDataSource } from "../dataSource/data-source";
 
 export class typeOrmCarsRepo implements CarsRepositoryPort {
-  private carsRepository = AppDataSource.getRepository(Cars);
-  private usersRepository = AppDataSource.getRepository(User);
-  async findAll(): Promise<Cars[]> {
-    const cars = this.carsRepository.find({ relations: ["user"] });
+  private carsRepository = AppDataSource.getRepository(CarsORM);
+  private usersRepository = AppDataSource.getRepository(UserORM);
+  async findAll(): Promise<Car[]> {
+    const cars = await this.carsRepository.find({ relations: ["user"] });
     return cars;
   }
-  async findByOne(param: string): Promise<Cars | null> {
-    const car = this.carsRepository.findOne({
+  async findByOne(param: string): Promise<Car | null> {
+    const car = await this.carsRepository.findOne({
       where: { id: param },
       relations: ["user"],
     });
     return car;
   }
-  async saveCar(user: Cars, id: string): Promise<Cars> {
+  async saveCar(user: Car, id: string): Promise<Car> {
     const owner = await this.usersRepository.findOne({ where: { id } });
-    const car = new Cars();
+    if (!owner) {
+      throw new Error("User not found");
+    }
+    const car = new CarsORM();
     car.name = user?.name;
     car.brand = user?.brand;
     car.color = user?.color;
-    car.user = owner as User;
-
+    car.user = owner;
     return this.carsRepository.save(car);
   }
   async deleteCar(id: string): Promise<boolean> {
@@ -36,7 +40,7 @@ export class typeOrmCarsRepo implements CarsRepositoryPort {
     await this.carsRepository.remove(carToDelete);
     return true;
   }
-  async updateCar(id: string, user: Cars): Promise<Cars> {
+  async updateCar(id: string, user: Car): Promise<Car> {
     const carToUpdate = await this.carsRepository.findOne({ where: { id } });
     if (!carToUpdate) {
       throw new Error("Car not found");

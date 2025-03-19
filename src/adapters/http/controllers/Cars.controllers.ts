@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { CarsRepositoryPort } from "../../../core/ports/CarsRepositoryPort";
 import { CarService } from "../../../core/services/carService";
 
 export class CarsController {

@@ -1,9 +1,9 @@
-import { Cars } from "../entity/Cars";
+import { Car } from "../domain/Car";
 
 export interface CarsRepositoryPort {
-  findAll(): Promise<Cars[]>;
-  findByOne(param: string): Promise<Cars | null>;
-  saveCar(user: Cars, id: string): Promise<Cars>;
+  findAll(): Promise<Car[]>;
+  findByOne(param: string): Promise<Car | null>;
+  saveCar(user: Car, id: string): Promise<Car>;
   deleteCar(id: string): Promise<boolean>;
-  updateCar(id: string, user: Cars): Promise<Cars>;
+  updateCar(id: string, user: Car): Promise<Car>;
 }
