@@ -6,6 +6,7 @@ import * as cors from "cors";
 import "reflect-metadata";
 import { Middleware } from "./adapters/http/middleware/Middleware";
 import { carRoutes } from "./adapters/http/routes/car.routes";
+import e = require("express");
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,3 +29,5 @@ AppDataSource.initialize()
   .catch((error) => {
     console.log(error);
   });
+
+  export  {app};
